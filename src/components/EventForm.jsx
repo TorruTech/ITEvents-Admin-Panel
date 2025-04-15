@@ -16,15 +16,16 @@ function EventForm({ onCreate }) {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
+    <form onSubmit={handleSubmit(onSubmit)} className="eventForm">
       <h2>Crear Evento</h2>
-      <input {...register("name")} placeholder="Nombre del evento" />
-      <input {...register("description")} placeholder="Descripción" />
-      <input {...register("dateDescription")} placeholder="Fecha texto" />
-      <input type="date" {...register("date")} />
-      <input {...register("imageUrl")} placeholder="URL de imagen" />
-      <input type="number" {...register("category.id")} placeholder="ID Categoría" />
-      <input type="number" {...register("location.id")} placeholder="ID Localización" />
+      <input {...register("name")} placeholder="Nombre del evento" className="eventInput"/>
+      <input {...register("description")} placeholder="Descripción" className="eventInput"/>
+      <input {...register("dateDescription")} placeholder="Fecha texto" className="eventInput"/>
+      <input type="date" {...register("date")} className="eventInput"/>
+      <input {...register("imageUrl")} placeholder="URL de imagen" className="eventInput"/>
+      <input type="number" {...register("category.id")} placeholder="ID Categoría" className="eventInput"/>
+      <input type="number" {...register("location.id")} placeholder="ID Localización" className="eventInput"/>
+      <br />
       <button type="submit">Guardar</button>
     </form>
   );

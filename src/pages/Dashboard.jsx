@@ -3,6 +3,7 @@ import EventForm from "../components/EventForm";
 import CategoryForm from "../components/CategoryForm";
 import LocationForm from "../components/LocationForm";
 import EventList from "../components/EventList";
+import Footer from "../components/Footer";
 
 function Dashboard() {
 
@@ -13,13 +14,18 @@ function Dashboard() {
     };
 
     return (
-        <div id="dashboardContainer">
-            <h1>Panel de Administración</h1>
-            <EventForm onCreate={handleEventCreated} />
-            <CategoryForm />
-            <LocationForm />
-            <EventList refreshKey={refreshKey} />
-        </div>
+        <>
+            <div id="mainContainer">
+                <div id="dashboardContainer">
+                    <h1 className="gradient-title">Panel de Administración</h1>
+                    <EventForm onCreate={handleEventCreated} />
+                    <CategoryForm />
+                    <LocationForm />
+                    <EventList refreshKey={refreshKey} />
+                </div>
+            </div>
+            <Footer />
+        </>
     );
 }
 

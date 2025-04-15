@@ -30,7 +30,7 @@ function EventList({ refreshKey }) {
   }, [refreshKey ?? 0]);
 
   return (
-    <div style={{ marginTop: "2rem" }}>
+    <div style={{ marginTop: "5rem", marginBottom: "3rem", background: "linear-gradient(to right, #2C1E57,#202458", padding: "2rem", borderRadius: "8px"}}>
       <h2>Eventos registrados</h2>
       <ul style={{ listStyle: "none", padding: 0 }}>
         {events.map((event) => (

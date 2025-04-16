@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 
-function EventList({ refreshKey }) {
+function EventList({ refreshKey, onEdit }) {
   const [events, setEvents] = useState([]);
 
   const fetchEvents = async () => {
@@ -47,19 +47,33 @@ function EventList({ refreshKey }) {
             <span>
               <strong>{event.name}</strong> — {event.dateDescription}
             </span>
-            <button
-              onClick={() => deleteEvent(event.id)}
+            <div>
+              <button
+                onClick={() => deleteEvent(event.id)}
+                style={{
+                  backgroundColor: "transparent",
+                  border: "none",
+                  color: "red",
+                  fontWeight: "bold",
+                  fontSize: "1.2rem",
+                  cursor: "pointer"
+                }}
+              >
+                ❌
+              </button>
+              <button
+              onClick={() => onEdit(event)}
               style={{
                 backgroundColor: "transparent",
                 border: "none",
-                color: "red",
-                fontWeight: "bold",
-                fontSize: "1.2rem",
-                cursor: "pointer"
+                color: "#60a5fa",
+                fontSize: "1.1rem",
+                cursor: "pointer",
               }}
             >
-              ❌
+              ✏️
             </button>
+          </div>
           </li>
         ))}
       </ul>

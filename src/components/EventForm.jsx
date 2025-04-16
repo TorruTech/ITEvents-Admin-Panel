@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, FormProvider } from "react-hook-form";
 import axios from "axios";
+import ImageUploader from "./ImageUploader"; 
 
 function EventForm({ onCreate, eventToEdit, cancelEdit }) {
-  const { register, handleSubmit, reset, setValue } = useForm();
+  const methods = useForm();
+  const { register, handleSubmit, reset, setValue } = methods;
   const [categories, setCategories] = useState([]);
   const [locations, setLocations] = useState([]);
 
@@ -27,6 +29,7 @@ function EventForm({ onCreate, eventToEdit, cancelEdit }) {
       setValue("description", eventToEdit.description);
       setValue("dateDescription", eventToEdit.dateDescription);
       setValue("date", eventToEdit.date);
+      setValue("labels", eventToEdit.labels);
       setValue("imageUrl", eventToEdit.imageUrl);
       setValue("categoryId", eventToEdit.category?.id);
       setValue("locationId", eventToEdit.location?.id);
@@ -38,6 +41,7 @@ function EventForm({ onCreate, eventToEdit, cancelEdit }) {
   const onSubmit = async (data) => {
     const payload = {
       ...data,
+      labels: JSON.stringify(data.labels.split(",").map((label) => label.trim())),
       category: { id: parseInt(data.categoryId) },
       location: { id: parseInt(data.locationId) }
     };
@@ -59,44 +63,50 @@ function EventForm({ onCreate, eventToEdit, cancelEdit }) {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="max-w-300">
-      <h2>{eventToEdit ? "Editar Evento" : "Crear Evento"}</h2>
+    <FormProvider {...methods}>
+      <form onSubmit={handleSubmit(onSubmit)} className="max-w-300">
+        <h2>{eventToEdit ? "Editar Evento" : "Crear Evento"}</h2>
 
-      <input {...register("name")} placeholder="Nombre del evento" required className="eventInput" />
-      <input {...register("description")} placeholder="Descripción" className="eventInput" />
-      <input {...register("dateDescription")} placeholder="Fecha texto" className="eventInput" />
-      <input type="date" {...register("date")} required className="eventInput" />
-      <input {...register("imageUrl")} placeholder="URL de imagen" className="eventInput" />
+        <input {...register("name")} placeholder="Nombre del evento" required className="eventInput" />
+        <input {...register("description")} placeholder="Descripción" className="eventInput" />
+        <input {...register("dateDescription")} placeholder="Fecha texto" className="eventInput" />
+        <input type="date" {...register("date")} required className="eventInput" />
+        <input {...register("labels")} placeholder="Etiquetas separadas por coma" className="eventInput" />
 
-      <select {...register("categoryId")} required>
-        <option value="">Selecciona una categoría</option>
-        {categories.map((cat) => (
-          <option key={cat.id} value={cat.id}>
-            {cat.name}
-          </option>
-        ))}
-      </select>
+        <select {...register("categoryId")} required>
+          <option value="">Selecciona una categoría</option>
+          {categories.map((cat) => (
+            <option key={cat.id} value={cat.id}>
+              {cat.name}
+            </option>
+          ))}
+        </select>
 
-      <select {...register("locationId")} required>
-        <option value="">Selecciona una ciudad</option>
-        {locations.map((loc) => (
-          <option key={loc.id} value={loc.id}>
-            {loc.name}
-          </option>
-        ))}
-      </select>
+        <select {...register("locationId")} required>
+          <option value="">Selecciona una ciudad</option>
+          {locations.map((loc) => (
+            <option key={loc.id} value={loc.id}>
+              {loc.name}
+            </option>
+          ))}
+        </select>
 
-      <br />
-      <button type="submit">{eventToEdit ? "Actualizar" : "Guardar"}</button>
-      {eventToEdit && (
-        <button type="button" className="ml-2" onClick={() => {
-          reset();
-          if (cancelEdit) cancelEdit(); 
-        }}>
-          Limpiar
-        </button>        
-      )}
-    </form>
+        <br />
+        
+        <ImageUploader />
+        <input type="hidden" {...register("imageUrl")}/>
+
+        <button type="submit" style={{margin: "5px 0"}}>{eventToEdit ? "Actualizar" : "Guardar"}</button>
+        {eventToEdit && (
+          <button type="button" className="ml-2" onClick={() => {
+            reset();
+            if (cancelEdit) cancelEdit(); 
+          }}>
+            Limpiar
+          </button>        
+        )}
+      </form>
+    </FormProvider>
   );
 }
 

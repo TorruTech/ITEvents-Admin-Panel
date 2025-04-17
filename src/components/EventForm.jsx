@@ -29,7 +29,20 @@ function EventForm({ onCreate, eventToEdit, cancelEdit }) {
       setValue("description", eventToEdit.description);
       setValue("dateDescription", eventToEdit.dateDescription);
       setValue("date", eventToEdit.date);
-      setValue("labels", eventToEdit.labels);
+
+      let parsedLabels = eventToEdit.labels;
+
+      if (typeof parsedLabels === "string") {
+        try {
+          parsedLabels = JSON.parse(parsedLabels);
+        } catch (err) {
+          console.warn("Error al parsear labels:", err);
+          parsedLabels = [];
+        }
+      }
+
+      setValue("labels", parsedLabels.join(", "));
+
       setValue("imageUrl", eventToEdit.imageUrl);
       setValue("categoryId", eventToEdit.category?.id);
       setValue("locationId", eventToEdit.location?.id);

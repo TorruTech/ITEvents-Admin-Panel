@@ -2,7 +2,9 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Footer from "../components/Footer";
 import { auth } from "../auth/firebaseConfig"; 
-import { signInWithEmailAndPassword } from "firebase/auth";
+import { signInWithEmailAndPassword, sendPasswordResetEmail } from "firebase/auth";
+import { toast } from "react-toastify";
+
 
 function Login() {
   const [email, setEmail] = useState("");
@@ -42,6 +44,19 @@ function Login() {
       console.error("Login error", err);
       setErrorMsg("Email o contraseña incorrectos");
     }
+  };
+
+  
+  const resetPassword = () => {
+
+    sendPasswordResetEmail(auth, email)
+    .then(() => {
+      toast.success("Email de reseteo enviado");
+    })
+    .catch((error) => {
+      console.log(error)
+      toast.error("Error al enviar el correo");
+    });
   };
 
   return (
@@ -88,9 +103,15 @@ function Login() {
           </form>
 
           <p className="text-sm text-center text-gray-400 mt-6">
-            ¿Olvidaste tu contraseña?{" "}
-            <a href="#" className="text-violet-400 hover:underline">Recupérala aquí</a>
-          </p>
+        ¿Olvidaste tu contraseña?{" "}
+          <span
+            onClick={resetPassword}
+            className="text-violet-400 hover:underline cursor-pointer"
+        >
+            Recupérala aquí
+          </span>
+         </p>
+
         </div>
       </div>
       <Footer />

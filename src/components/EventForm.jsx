@@ -58,9 +58,11 @@ function EventForm({ onCreate, eventToEdit, cancelEdit }) {
       ...data,
       labels: JSON.stringify(data.labels.split(",").map((label) => label.trim())),
       category: { id: parseInt(data.categoryId) },
-      location: { id: parseInt(data.locationId) }
+      location: { id: parseInt(data.locationId) },
+      latitude: parseFloat(data.latitude),
+      longitude: parseFloat(data.longitude)
     };
-
+    
     try {
       if (eventToEdit) {
         await axios.put(`https://iteventsbackend.onrender.com/api/events/${eventToEdit.id}`, payload);

@@ -44,6 +44,14 @@ h2 {
   -webkit-text-fill-color: transparent;
 }
 
+.customLabel {
+  font-size: 0.9em;
+  font-weight: bold;
+  background: linear-gradient(to right, #a78bfa, #60a5fa); 
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
 button {
   border-radius: 8px;
   border: 1px solid transparent;

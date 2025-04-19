@@ -103,7 +103,7 @@ function Login() {
           </form>
 
           <p className="text-sm text-center text-gray-400 mt-6">
-        ¿Olvidaste tu contraseña?{" "}
+            ¿Olvidaste tu contraseña?{" "}
           <span
             onClick={resetPassword}
             className="text-violet-400 hover:underline cursor-pointer"

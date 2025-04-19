@@ -29,6 +29,8 @@ function EventForm({ onCreate, eventToEdit, cancelEdit }) {
       setValue("description", eventToEdit.description);
       setValue("dateDescription", eventToEdit.dateDescription);
       setValue("date", eventToEdit.date);
+      setValue("latitude", eventToEdit.latitude);
+      setValue("longitude", eventToEdit.longitude);
 
       let parsedLabels = eventToEdit.labels;
 
@@ -84,6 +86,8 @@ function EventForm({ onCreate, eventToEdit, cancelEdit }) {
         <input {...register("description")} placeholder="Descripción" className="eventInput" />
         <input {...register("dateDescription")} placeholder="Fecha texto" className="eventInput" />
         <input type="date" {...register("date")} required className="eventInput" />
+        <input {...register("latitude")} placeholder="Latitud" style={{width: "50%"}} />
+        <input {...register("longitude")} placeholder="Longitud" style={{width: "50%"}} />
         <input {...register("labels")} placeholder="Etiquetas separadas por coma" className="eventInput" />
 
         <select {...register("categoryId")} required>

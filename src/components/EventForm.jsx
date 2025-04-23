@@ -5,9 +5,10 @@ import ImageUploader from "./ImageUploader";
 
 function EventForm({ onCreate, eventToEdit, cancelEdit }) {
   const methods = useForm();
-  const { register, handleSubmit, reset, setValue } = methods;
+  const { register, handleSubmit, reset, setValue, watch } = methods;
   const [categories, setCategories] = useState([]);
   const [locations, setLocations] = useState([]);
+  const requiresTicket = watch("requiresTicket");
 
   useEffect(() => {
     const fetchData = async () => {
@@ -31,6 +32,9 @@ function EventForm({ onCreate, eventToEdit, cancelEdit }) {
       setValue("date", eventToEdit.date);
       setValue("latitude", eventToEdit.latitude);
       setValue("longitude", eventToEdit.longitude);
+      setValue("requiresTicket", eventToEdit.requiresTicket);
+      setValue("totalTickets", eventToEdit.totalTickets);
+      setValue("availableTickets", eventToEdit.availableTickets);
 
       let parsedLabels = eventToEdit.labels;
 
@@ -85,8 +89,8 @@ function EventForm({ onCreate, eventToEdit, cancelEdit }) {
         <h2>{eventToEdit ? "Editar Evento" : "Crear Evento"}</h2>
 
         <input {...register("name")} placeholder="Nombre del evento" required className="eventInput" />
-        <input {...register("description")} placeholder="Descripción" className="eventInput" />
-        <input {...register("dateDescription")} placeholder="Fecha texto" className="eventInput" />
+        <input {...register("description")} placeholder="Descripción" required className="eventInput" />
+        <input {...register("dateDescription")} placeholder="Fecha texto" required className="eventInput" />
         <input type="date" {...register("date")} required className="eventInput" />
         <input {...register("latitude")} placeholder="Latitud" style={{width: "50%"}} />
         <input {...register("longitude")} placeholder="Longitud" style={{width: "50%"}} />
@@ -109,11 +113,34 @@ function EventForm({ onCreate, eventToEdit, cancelEdit }) {
             </option>
           ))}
         </select>
+    
+        <div style={{ textAlign: "center", margin: "5px 0", display: "flex", alignSelf: "center", flexDirection: "column" }}>
+          <label style={{ fontWeight: "bold"}}>{" "}¿Requiere entrada?</label>
+          <input type="checkbox" {...register("requiresTicket")} />
+        </div>
 
-        <br />
-        
+        {requiresTicket && (
+          <div>
+            <input
+              type="number"
+              {...register("totalTickets", { required: requiresTicket })}
+              placeholder="Total de entradas"
+              className="eventInput"
+              style={{ width: "50%" }}
+            />
+
+            <input
+              type="number"
+              {...register("availableTickets", { required: requiresTicket })}
+              placeholder="Entradas disponibles"
+              className="eventInput"
+              style={{ width: "50%" }}
+            />
+          </div>
+        )}
+
         <ImageUploader />
-        <input type="hidden" {...register("imageUrl")}/>
+        <input type="hidden" {...register("imageUrl")} required/>
 
         <button type="submit" style={{margin: "5px 0"}}>{eventToEdit ? "Actualizar" : "Guardar"}</button>
         {eventToEdit && (

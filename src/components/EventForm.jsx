@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
 import { useForm, FormProvider } from "react-hook-form";
 import axios from "axios";
-import ImageUploader from "./ImageUploader"; 
+import ImageUploader from "./ImageUploader";
+import { toast } from "react-toastify";
+
 
 function EventForm({ onCreate, eventToEdit, cancelEdit }) {
   const methods = useForm();
@@ -35,6 +37,7 @@ function EventForm({ onCreate, eventToEdit, cancelEdit }) {
       setValue("requiresTicket", eventToEdit.requiresTicket);
       setValue("totalTickets", eventToEdit.totalTickets);
       setValue("availableTickets", eventToEdit.availableTickets);
+      setValue("webUrl", eventToEdit.webUrl);
 
       let parsedLabels = eventToEdit.labels;
 
@@ -70,10 +73,10 @@ function EventForm({ onCreate, eventToEdit, cancelEdit }) {
     try {
       if (eventToEdit) {
         await axios.put(`https://iteventsbackend.onrender.com/api/events/${eventToEdit.id}`, payload);
-        alert("Evento actualizado");
+        toast.success("Evento actualizado correctamente");
       } else {
         await axios.post("https://iteventsbackend.onrender.com/api/events", payload);
-        alert("Evento creado");
+        toast.success("Evento creado correctamente");
       }
 
       reset();
@@ -94,6 +97,7 @@ function EventForm({ onCreate, eventToEdit, cancelEdit }) {
         <input type="date" {...register("date")} required className="eventInput" />
         <input {...register("latitude")} placeholder="Latitud" style={{width: "50%"}} />
         <input {...register("longitude")} placeholder="Longitud" style={{width: "50%"}} />
+        <input {...register("webUrl")} placeholder="URL Web" required className="eventInput" />
         <input {...register("labels")} placeholder="Etiquetas separadas por coma" className="eventInput" />
 
         <select {...register("categoryId")} required>

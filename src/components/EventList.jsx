@@ -48,6 +48,18 @@ function EventList({ refreshKey, onEdit }) {
               <strong>{event.name}</strong> — {event.dateDescription}
             </span>
             <div>
+            <button
+              onClick={() => onEdit(event)}
+              style={{
+                backgroundColor: "transparent",
+                border: "none",
+                color: "#60a5fa",
+                fontSize: "1.1rem",
+                cursor: "pointer",
+              }}
+            >
+              ✏️
+            </button>
               <button
                 onClick={() => deleteEvent(event.id)}
                 style={{
@@ -61,18 +73,6 @@ function EventList({ refreshKey, onEdit }) {
               >
                 ❌
               </button>
-              <button
-              onClick={() => onEdit(event)}
-              style={{
-                backgroundColor: "transparent",
-                border: "none",
-                color: "#60a5fa",
-                fontSize: "1.1rem",
-                cursor: "pointer",
-              }}
-            >
-              ✏️
-            </button>
           </div>
           </li>
         ))}

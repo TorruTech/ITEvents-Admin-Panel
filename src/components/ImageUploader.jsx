@@ -1,6 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
 import { useFormContext } from "react-hook-form"; 
+import { toast } from "react-toastify";
 
 function ImageUploader() {
   const [uploading, setUploading] = useState(false);
@@ -21,10 +22,26 @@ function ImageUploader() {
       const imageUrl = res.data.secure_url;
       setValue("imageUrl", imageUrl); 
       setPreviewUrl(imageUrl);
-      alert("Imagen subida con éxito ✅");
+      toast.success("Imagen subida con éxito ✅", {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
     } catch (err) {
       console.error("Error al subir la imagen", err);
-      alert("Error al subir la imagen ❌");
+      toast.error("Error al subir la imagen ❌", {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
     } finally {
       setUploading(false);
     }

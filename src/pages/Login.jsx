@@ -5,7 +5,6 @@ import { auth } from "../auth/firebaseConfig";
 import { signInWithEmailAndPassword, sendPasswordResetEmail } from "firebase/auth";
 import { toast } from "react-toastify";
 
-
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -46,7 +45,6 @@ function Login() {
     }
   };
 
-  
   const resetPassword = () => {
 
     sendPasswordResetEmail(auth, email)

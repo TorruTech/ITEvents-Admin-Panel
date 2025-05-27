@@ -41,6 +41,7 @@ function Login() {
       }
     } catch (err) {
        console.error("Login error", err.code, err.message);
+       console.error("Error details:", err);
         setErrorMsg("Error: " + err.message);
     }
   };

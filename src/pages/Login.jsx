@@ -40,8 +40,8 @@ function Login() {
         setErrorMsg(errorText || "Acceso denegado");
       }
     } catch (err) {
-      console.error("Login error", err);
-      setErrorMsg("Email o contraseña incorrectos");
+       console.error("Login error", err.code, err.message);
+        setErrorMsg("Error: " + err.message);
     }
   };
 
@@ -52,7 +52,7 @@ function Login() {
       toast.success("Email de reseteo enviado");
     })
     .catch((error) => {
-      console.log(error)
+      console.log(error.code, error.message);
       toast.error("Error al enviar el correo");
     });
   };

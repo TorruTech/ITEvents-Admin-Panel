@@ -3,6 +3,17 @@ import axios from "axios";
 
 function EventList({ refreshKey, onEdit }) {
   const [events, setEvents] = useState([]);
+  const [selectedCity, setSelectedCity] = useState("All");
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    handleResize(); // check on load
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   const fetchEvents = async () => {
     try {
@@ -17,7 +28,6 @@ function EventList({ refreshKey, onEdit }) {
     if (!window.confirm("¿Estás seguro de que quieres eliminar este evento?")) return;
     try {
       await axios.delete(`https://iteventsbackend.onrender.com/api/events/${id}`);
-      // Quita el evento eliminado del estado sin necesidad de refetch
       setEvents((prev) => prev.filter((e) => e.id !== id));
     } catch (error) {
       console.error("Error al eliminar evento", error);
@@ -29,11 +39,42 @@ function EventList({ refreshKey, onEdit }) {
     fetchEvents();
   }, [refreshKey ?? 0]);
 
+  const filteredEvents = selectedCity === "All"
+    ? [...events].sort((a, b) => a.name.localeCompare(b.name))
+    : [...events]
+        .filter((e) => e.location?.name === selectedCity)
+        .sort((a, b) => a.name.localeCompare(b.name));
+
+  const uniqueCities = [...new Set(events.map((e) => e.location?.name))].filter(Boolean).sort();
+
   return (
-    <div style={{ marginTop: "5rem", marginBottom: "3rem", background: "linear-gradient(to right, #2C1E57,#202458", padding: "2rem", borderRadius: "8px"}}>
+    <div style={{
+      marginTop: "5rem",
+      marginBottom: "3rem",
+      background: "linear-gradient(to right, #2C1E57, #202458)",
+      padding: "2rem",
+      borderRadius: "8px",
+      color: "white"
+    }}>
       <h2>Eventos registrados</h2>
+
+      <div style={{ marginBottom: "1rem" }}>
+        <label htmlFor="cityFilter" style={{ marginRight: "0.5rem" }}>Filtrar por ciudad:</label>
+        <select
+          id="cityFilter"
+          value={selectedCity}
+          onChange={(e) => setSelectedCity(e.target.value)}
+          style={{ padding: "0.5rem", borderRadius: "4px" }}
+        >
+          <option value="All">Todas las ciudades</option>
+          {uniqueCities.map((city) => (
+            <option key={city} value={city}>{city}</option>
+          ))}
+        </select>
+      </div>
+
       <ul style={{ listStyle: "none", padding: 0 }}>
-        {events.map((event) => (
+        {filteredEvents.map((event) => (
           <li
             key={event.id}
             style={{
@@ -41,25 +82,34 @@ function EventList({ refreshKey, onEdit }) {
               justifyContent: "space-between",
               alignItems: "center",
               borderBottom: "1px solid #ccc",
-              padding: "0.5rem 0"
+              padding: "1rem 0",
+              gap: "1rem"
             }}
           >
-            <span>
-              <strong>{event.name}</strong> — {event.dateDescription}
-            </span>
-            <div>
-            <button
-              onClick={() => onEdit(event)}
-              style={{
-                backgroundColor: "transparent",
-                border: "none",
-                color: "#60a5fa",
-                fontSize: "1.1rem",
-                cursor: "pointer",
-              }}
-            >
-              ✏️
-            </button>
+            <div style={{ flex: 1 }}>
+              <strong>{event.name}</strong>
+              {!isMobile && (
+                <div>{event.dateDescription} ({event.location?.name})</div>
+              )}
+            </div>
+
+            <div style={{
+              display: "flex",
+              gap: "0.5rem",
+              paddingTop: "0.2rem"
+            }}>
+              <button
+                onClick={() => onEdit(event)}
+                style={{
+                  backgroundColor: "transparent",
+                  border: "none",
+                  color: "#60a5fa",
+                  fontSize: "1.1rem",
+                  cursor: "pointer"
+                }}
+              >
+                ✏️
+              </button>
               <button
                 onClick={() => deleteEvent(event.id)}
                 style={{
@@ -73,7 +123,7 @@ function EventList({ refreshKey, onEdit }) {
               >
                 ❌
               </button>
-          </div>
+            </div>
           </li>
         ))}
       </ul>
